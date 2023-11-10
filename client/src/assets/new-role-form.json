@@ -1,0 +1,12 @@
+{
+    "name": {
+      "type": "text",
+      "placeholder": "Nom du rôle",
+      "name": "name",
+      "id": "name"
+    },
+    "permissions":{
+        "type": "permissions"
+    }
+}
+  

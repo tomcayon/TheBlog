@@ -1,0 +1,31 @@
+{
+    "name": {
+      "type": "text",
+      "placeholder": "Nom d'utilisateur",
+      "name": "name",
+      "id": "name"
+    },
+    "password": {
+      "type": "password",
+      "placeholder": "Mot de passe",
+      "name": "password",
+      "id": "password"
+    },
+    "role": {
+      "type": "select",
+      "placeholder": "Rôle",
+      "name": "role",
+      "id": "role",
+      "options": [
+        {
+          "value": "author",
+          "label": "Auteur"
+        },
+        {
+          "value": "administrator",
+          "label": "Administrateur"
+        }
+      ]
+    }
+}
+  

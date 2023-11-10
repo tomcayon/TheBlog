@@ -1,0 +1,39 @@
+{
+    "title":{
+        "type":"text",
+        "placeholder":"Inserez votre titre",
+        "name":"title",
+        "id":"title"
+    },
+    "article":{
+        "type":"editor",
+        "placeholder":"Inserez votre article",
+        "name":"content",
+        "id":"content"
+    },
+    "image":{
+        "type":"image",
+        "name":"image",
+        "id":"image"
+    },
+    "status": {
+        "type": "select",
+        "placeholder": "Statut",
+        "name": "status",
+        "id": "status",
+        "options": [
+          {
+            "value": "draft",
+            "label": "Brouillon"
+          },
+          {
+            "value": "pending",
+            "label": "En attente"
+        },
+          {
+            "value": "published",
+            "label": "Publié"
+          }
+        ]
+      }
+}

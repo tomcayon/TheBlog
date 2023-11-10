@@ -1,0 +1,14 @@
+{
+    "username":{
+        "type":"text",
+        "placeholder":"Inserez votre nom d'utilisateur",
+        "name":"username",
+        "id":"username"
+    },
+    "password":{
+        "type":"password",
+        "placeholder":"Inserez votre mot de passe",
+        "name":"password",
+        "id":"password"
+    }
+}

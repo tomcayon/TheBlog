@@ -1,0 +1,16 @@
+{
+  "administrator": {
+    "ViewUsers": true,
+    "ViewPosts": true,
+    "DeletePosts": true,
+    "PublishPosts": true,
+    "BypassMaintenance": true
+  },
+  "author": {
+    "ViewUsers": false,
+    "ViewPosts": true,
+    "PublishPosts": false,
+    "DeletePosts": false,
+    "BypassMaintenance": false
+  }
+}
