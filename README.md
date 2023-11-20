@@ -6,6 +6,6 @@ L'application a pour finalité de comprendre les fonctionnalités suivantes :
 
 - Formulaire dynamique
 - Gestion des rôles et des permissions
-- Création d'articles avec prise en charge de Markdown
+- Création d'articles avec mise en forme (avec Quill.js)
 - Gestion des utilisateurs
 - Catégorisation des articles
