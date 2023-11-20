@@ -1,4 +1,4 @@
-#TheBlog
+# TheBlog
 TheBlog est une application web développée avec Node.js, React et Bootstrap. C'est une première tentative de création d'une application en utilisant une architecture hexagonale.
 
 Fonctionnalités
