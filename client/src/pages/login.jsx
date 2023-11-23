@@ -75,6 +75,7 @@ function LoginPage() {
                   placeholder={formData[field].placeholder}
                   value={formDataState[field] || ''}
                   onChange={handleInputChange}
+                  required="required"
                 />
               </div>
             ))}

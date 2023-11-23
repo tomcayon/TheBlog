@@ -14,6 +14,16 @@ function NewRolePage() {
   const [permissionslist, setPermissionsList] = useState([]);
 
   const handleInputChange = (e) => {
+    if (e.target.type === 'checkbox') {
+      setFormData({ ...formData, [e.target.name]: e.target.checked });
+      return;
+    }
+
+    if(e.target.name === "name"){
+      // Autoriser uniquement les minuscules
+      e.target.value = e.target.value.toLowerCase();
+    }
+
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -64,7 +74,7 @@ function NewRolePage() {
               name={form[key].name}
               id={form[key].id}
               onChange={handleInputChange}
-              required={form[key].id === 'title' ? 'required' : ''}
+              required={form[key].id === 'title' || 'name' ? 'required' : ''}
             />
           </div>
         );
@@ -128,25 +138,49 @@ function NewRolePage() {
             </div>
         );
     } else if (form[key].type === 'permissions') {
-        useEffect(() => {
-            fetch('/api/permissions-list', {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                setPermissionsList(data);
-                console.log(data)
-                console.log(permissionslist)
-              });
-          }, []);
+      useEffect(() => {
+        fetch('/api/permissions-list', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            setPermissionsList(data);
+            
+            // Créer un objet temporaire pour contenir les valeurs de permission
+            const permissionsData = {};
+            data.forEach((permission) => {
+              permissionsData[permission] = false;
+            });
+    
+            // Mettre à jour formData avec les valeurs de permission
+            setFormData((prevFormData) => ({
+              ...prevFormData,
+              ...permissionsData,
+            }));
+          });
+      }, []);
         return (
-            <div className="mt-4 form-check form-switch">
-                <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Default switch checkbox input</label>s
-                <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"/>
-            </div>
+          <div key={index} className="mt-4">
+            {permissionslist.map((permission, permissionIndex) => (
+              <div key={permissionIndex} className="form-check form-switch">
+                <label className="form-check-label" htmlFor={`flexSwitchCheck${permission}`}>
+                  {permission}
+                </label>
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id={`flexSwitchCheck${permission}`}
+                  name={permission}
+                  defaultChecked={false} // Mettez la valeur par défaut ici
+                  onChange={handleInputChange}
+                />
+              </div>
+            ))}
+          </div>
         );
     }
       return null;
@@ -155,7 +189,27 @@ function NewRolePage() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-   
+    //post to /api/new-role
+    fetch('/api/new-role', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data === true) {
+          window.location.replace('/admin');
+        } else {
+          // Inserer une erreur dans la div #error
+          document.getElementById('error').innerHTML = `<div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">Rôle invalide</div>`;
+        }
+  
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
 
@@ -165,9 +219,10 @@ function NewRolePage() {
       <form onSubmit={handleFormSubmit}>
         {renderFormFields()}
         <button className="btn btn-dark mt-4" type="submit">
-          Envoyer
+          Enregistrer
         </button>
       </form>
+      <div id='error'></div>
     </div>
   );
 }

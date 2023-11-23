@@ -18,7 +18,7 @@ require('dotenv').config();
 // Importation des variables d'environnement
 const port = process.env.PORT || 3000;
 let maintenance = false;
-let BLOGNAME = process.env.NAME;
+let BLOGNAME = process.env.NAME || "Blog";
 
 // Configuration des middlewares
 app.use(bodyParser.json());
@@ -478,6 +478,7 @@ app.get('/api/get-name', (req, res) => {
 });
 
 app.post('/api/update-name', (req, res) => {
+    // Require .env file
     console.log(req.body);
     const name = req.body.name;
     process.env.NAME = name;
@@ -485,12 +486,115 @@ app.post('/api/update-name', (req, res) => {
     res.send(true);
 });
 
+app.post('/api/new-role', (req, res) => {
+    const role = req.body;
+    const rolename = role.name.toLowerCase();
+    delete role.name;
+
+    // Vérifier si le rôle existe déjà
+    if (permissions[rolename]) {
+        
+        return res.send(false);
+    }
+
+    // Charger le fichier permissions.json existant
+    const existingPermissions = JSON.parse(fs.readFileSync('./permissions.json', 'utf-8'));
+
+    // Ajouter le nouveau rôle
+    existingPermissions[rolename] = role;
+
+    // Enregistrer le fichier mis à jour
+    fs.writeFileSync('./permissions.json', JSON.stringify(existingPermissions, null, 2), 'utf-8');
+
+    res.send(true);
+});
+
+app.get('/api/roles', (req, res) => {
+    const roles = Object.keys(permissions);
+    res.send(roles);
+});
+
+app.get('/api/role/:role', (req, res) => {
+    // Vérifier que le rôle existe
+    const role = req.params.role;
+    if (!permissions[role]) {
+        return res.status(404).send('Role not found');
+    }
+    res.send(permissions[role]);
+});
+
+app.get('/api/user-roles', (req, res) => {
+    // Envoyer le nombre d'utilisateurs par rôle (role.users)
+    const roles = Object.keys(permissions);
+    const sql = 'SELECT * FROM users';
+  
+    db.all(sql, [], (err, rows) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Erreur lors de la récupération des utilisateurs depuis la base de données');
+        return;
+      }
+  
+      const users = rows;
+      let userRoles = [];
+  
+      roles.forEach((role) => {
+        let roleObject = { name: role, users: 0 };
+  
+        users.forEach((user) => {
+          if (user.roles.includes(role)) {
+            roleObject.users += 1;
+          }
+        });
+  
+        userRoles.push(roleObject);
+      });
+  
+      res.send(userRoles);
+    });
+});
+  
+
 app.get('/api/permissions-list', (req, res) => {
     //Get the first role in the permissions.json file and send list of permissions (delete true and false, just send permissions name)
     const role = Object.keys(permissions)[0];
     const permissionsList = Object.keys(permissions[role]);
     res.send(permissionsList);
 });
+
+app.get('/api/list-users-role/:id', (req, res) => {
+    const id = req.params.id;
+    const sql = 'SELECT username, id FROM users WHERE roles = ?';
+    
+    db.all(sql, [id], (err, rows) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Error retrieving users from database');
+            return;
+        }
+
+        if (rows && rows.length > 0) {
+            const users = rows.map(row => ({ username: row.username, id: row.id }));
+            // Envoyez les noms d'utilisateur avec les ID
+            res.json(users);
+        } else {
+            res.json([]); // Si aucun utilisateur n'est trouvé, renvoyez un tableau vide
+        }
+    });
+});
+
+
+app.get('/api/users',(req,res)=>{
+    const sql = 'SELECT username FROM users';
+    db.all(sql,[],(err,rows)=>{
+        if(err){
+            console.error(err);
+            res.status(500).send('Error retrieving users from database');
+            return;
+        }
+        res.send(rows);
+    });
+})
 
 app.post('/api/test', upload.single('cover'), (req, res) => {
     if(req.file){

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom'; // Pour créer des liens vers d'autres pages
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Pour utiliser les icônes
-import { faFileAlt, faList, faUsers, faCog, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'; // Pour importer les icônes
+import { faFileAlt, faList, faUsers, faCog, faSignOutAlt, faShield } from '@fortawesome/free-solid-svg-icons'; // Pour importer les icônes
 import { Permission} from '../App';
 
 function AdminPannelPage() {
@@ -37,7 +37,7 @@ function AdminPannelPage() {
                 </Link>
             </div>
             {Permission("ViewUsers") ? (
-                <div className="col-md-3">
+                <div className="col-md-3 mb-4">
                 <Link to="/admin/list-users" className="text-decoration-none">
                     <div className="card text-center">
                         <div className="card-body">
@@ -48,6 +48,16 @@ function AdminPannelPage() {
                 </Link>
             </div>
             ) : null}
+            <div className="col-md-3">
+                <Link to="/admin/roles" className="text-decoration-none">
+                    <div className="card text-center">
+                        <div className="card-body">
+                            <FontAwesomeIcon icon={faShield} size="2x" className='mb-2'/>
+                            <h5 className="card-title">Rôles</h5>
+                        </div>
+                    </div>
+                </Link>
+            </div>
             <div className="col-md-3">
                 <Link to="/admin/settings" className="text-decoration-none">
                     <div className="card text-center">

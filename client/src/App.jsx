@@ -23,6 +23,8 @@ import { useEffect, useState } from 'react';
 import PermReq from './components/PermReq';
 import Maintenance from './pages/maintenance';
 import NewRolePage from './pages/new-role';
+import ListRolePage from './pages/list-role';
+import EditRolePage from './pages/edit-role';
 
 export function Permission(permission) {
   const permissionName = permission;
@@ -211,6 +213,8 @@ function App() {
         <Route path="/admin/new-user" element={<NewUserPage/>}/>
         <Route path="/admin/edit-user/:id" element={<EditUserPage/>}/>
         <Route path="/admin/new-role" element={<NewRolePage/>}/>
+        <Route path="/admin/roles" element={<ListRolePage/>}/>
+        <Route path="/admin/edit-role/:id" element={<EditRolePage/>}/>
         <Route path="/admin/settings" element={<SettingsPage/>}/>
       </Routes>
       </div>
